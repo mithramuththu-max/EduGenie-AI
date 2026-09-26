@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EduGenie</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Welcome to EduGenie 🧠✨</h1>
+
+    <p class="subtitle">
+        Your personal AI tutor for learning support!
+    </p>
+
+
+    <!-- 1. ASK QUESTION -->
+
+    <section>
+
+        <h3>Ask EduGenie a Question:</h3>
+
+        <div class="input-row">
+
+            <input
+                id="question"
+                type="text"
+                placeholder="Why is the sky blue?">
+
+            <button onclick="askQuestion()">
+                Get Answer
+            </button>
+
+        </div>
+
+        <div id="answer" class="result"></div>
+
+    </section>
+
+
+    <!-- 2. EXPLANATION -->
+
+    <section>
+
+        <h3>Need an Explanation?</h3>
+
+        <div class="input-row">
+
+            <input
+                id="topic"
+                type="text"
+                placeholder="Photosynthesis">
+
+            <button onclick="explainTopic()">
+                Explain
+            </button>
+
+        </div>
+
+        <div id="explanation" class="result"></div>
+
+    </section>
+
+
+    <!-- 3. SUMMARY -->
+
+    <section>
+
+        <h3>Summarize a Paragraph:</h3>
+
+        <div class="input-row">
+
+            <input
+                id="summaryText"
+                type="text"
+                placeholder="Paste long content to summarize">
+
+            <button onclick="summarizeText()">
+                Summarize
+            </button>
+
+        </div>
+
+        <div id="summary" class="result"></div>
+
+    </section>
+
+
+    <!-- 4. QUIZ -->
+
+    <section>
+
+        <h3>Generate a Quiz:</h3>
+
+        <div class="input-row">
+
+            <input
+                id="quizTopic"
+                type="text"
+                placeholder="Solar System">
+
+            <button onclick="generateQuiz()">
+                Generate Quiz
+            </button>
+
+        </div>
+
+        <div id="quiz" class="result"></div>
+
+    </section>
+
+
+    <!-- 5. RECOMMENDATIONS -->
+
+    <section>
+
+        <h3>Get Learning Recommendations:</h3>
+
+        <div class="input-row">
+
+            <input
+                id="recommendTopic"
+                type="text"
+                placeholder="e.g. Linear Regression">
+
+            <button onclick="getRecommendations()">
+                Get Recommendations
+            </button>
+
+        </div>
+
+        <div id="recommendations" class="result"></div>
+
+    </section>
+
+</div>
+
+
+<script>
+
+async function sendRequest(url, data, resultId) {
+
+    const result = document.getElementById(resultId);
+
+    result.innerText = "Thinking...";
+
+    try {
+
+        const response = await fetch(url, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+
+        });
+
+        const output = await response.json();
+
+        result.innerText = output.answer;
+
+    } catch (error) {
+
+        result.innerText = "Error connecting to server.";
+
+    }
+}
+
+
+function askQuestion() {
+
+    const question =
+        document.getElementById("question").value;
+
+    sendRequest(
+        "/ask",
+        { question: question },
+        "answer"
+    );
+}
+
+
+function explainTopic() {
+
+    const topic =
+        document.getElementById("topic").value;
+
+    sendRequest(
+        "/explain",
+        { topic: topic },
+        "explanation"
+    );
+}
+
+
+function summarizeText() {
+
+    const text =
+        document.getElementById("summaryText").value;
+
+    sendRequest(
+        "/summarize",
+        { text: text },
+        "summary"
+    );
+}
+
+
+function generateQuiz() {
+
+    const topic =
+        document.getElementById("quizTopic").value;
+
+    sendRequest(
+        "/quiz",
+        { topic: topic },
+        "quiz"
+    );
+}
+
+
+function getRecommendations() {
+
+    const topic =
+        document.getElementById("recommendTopic").value;
+
+    sendRequest(
+        "/recommend",
+        { topic: topic },
+        "recommendations"
+    );
+}
+
+</script>
+
+</body>
+
+</html>
